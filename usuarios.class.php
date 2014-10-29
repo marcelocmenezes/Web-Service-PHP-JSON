@@ -19,10 +19,10 @@ class Usuarios {
 	
 	
 	/*
-	* Função que exibe todos os usuários. 
-	* 
-	* Return array encoded JSON.
-	*/
+	 * Função que exibe todos os usuários. 
+	 * 
+	 * Return array encoded JSON.
+	 */
 	
 	function getUsuarios(){
 		$resultado = mysql_query("SELECT * FROM usuarios");
@@ -55,10 +55,10 @@ class Usuarios {
 	
 	
 	/*
-	* Função que exibe usuário por nome. 
-	*
-	* Return array encoded JSON.
-	*/
+	 * Função que exibe usuário por nome. 
+	 *
+	 * Return array encoded JSON.
+	 */
 	function getUsuariosByNome($nome){
 		$query = sprintf("SELECT * FROM usuarios WHERE usuario = '%s'", mysql_real_escape_string($nome));
 		$resultado = mysql_query($query);
