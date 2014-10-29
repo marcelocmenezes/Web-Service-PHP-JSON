@@ -78,7 +78,7 @@ class Usuarios {
 		//Se não houver erros na consulta.
 		else {
 			$dados['dados'] = mysql_fetch_assoc($resultado);
-			$dados['Mensagem'] = $num_rows 'registro encontrados.';
+			$dados['Mensagem'] = $num_rows . 'registro encontrados.';
 		}
 
 		return Json::encode($dados);
