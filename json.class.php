@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
  * Classe responsável pelo Encode dos dados em jSON.
