@@ -1,28 +1,26 @@
-<?php
-
-header('Content-Type:' . "text/plain");
-
+<?php define('BASEPATH', dirname(__FILE__));
+	
+header('Content-Type: text/plain; charset=UTF-8');
 error_reporting(0);
 
 
-require_once 'usuarios.class.php';
+require_once 'consulta.class.php';
 
-// lista todos os usuarios.
-if (empty($_GET)) {
-	
-	$usuarios = new Usuarios;
-	$usuarios->getUsuarios();
-	
-}
+if ($_SERVER['REQUEST_METHOD'] == 'GET'):
+		
+	if ($_GET):
+		$consulta = new Consulta;
+		$consulta->select('usuario'  , $_GET);
+	endif;
+		
+	if(empty($_GET)):
+		$consulta = new Consulta;
+		$consulta->select('usuarios' , null, 4);
+	endif;
 
-// Pesquisa por nome.
-if (!empty($_GET['nome'])){
-	
-	$nome = $_GET['nome'];
-	$usuarios = new Usuarios;
-	$usuarios->getUsuariosByNome($nome);
+endif;
 
-}
-
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST'):
+	exit('Não é permitido o método POST em nossos servidores');
+endif;
 
