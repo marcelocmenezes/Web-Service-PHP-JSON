@@ -84,51 +84,57 @@ class  Consulta {
 	 * Função que faz o SELECT em nosso Banco de Dados.
 	 * string	$tabela = nome da tabela que vai ser consultada.
 	 * array	$params = parâmetros da consulta. WHERE $params;
-	 * interger	$limit	= número de registros a ser retornado.
+	 * interger	$count	= número de registros a ser retornado.
 	 */	
-	public function select($tabela, $params = null, $limit = 5){
-		if (empty($tabela)):
+	public function select($tabela, $params = null, $count = 4, $order = 'id', $direct = 'DESC'){
+		if(empty($tabela)):
 			die('Nenhuma tabela selecionada');
 		endif;
 	
+
+	
 		if(is_string($tabela)):
 			if($params == null):
-				$sql = $this->conexao->prepare('SELECT * FROM '. $tabela .' LIMIT '. $limit);
+				$sql = $this->conexao->prepare("SELECT * FROM $tabela ORDER BY $order $direct LIMIT $count");
 				$sql->execute();
+				
 				for($i = 0; $i<$sql->rowCount(); $i++){
 					$dados['dados'][] = $sql->fetch(PDO::FETCH_ASSOC);
 				}
-			
-				echo JSON::encode($dados);
-			endif;
+				
+				$e = $sql->errorinfo();
+				$dados['mensagem'] = array('SQL' => self::erro($e[1]), 'WebService' => 'Retornou '.$sql->rowCount().' registro(s).');
+					
+				endif;
 			
 			if(is_array($params)):
 				foreach($params as $chave => $valor):
-			 		$where[] = $chave. ' = :' .$chave; 
+					$where[] = $chave. ' = :' .$chave; 
 				endforeach;
 	 		
 		 		$where = ' WHERE ' .implode(' AND ', $where);
-				$sql = $this->conexao->prepare('SELECT * FROM '. $tabela . $where .' LIMIT '. $limit);
+				$sql = $this->conexao->prepare("SELECT * FROM $tabela $where ORDER BY $order $direct LIMIT $count");
 				
 				foreach($params as $chave => $valor):
 					$sql->bindValue(':'.$chave, $valor);
 				endforeach;
+				
 				$sql->execute();	
+				
 				for($i = 0; $i<$sql->rowCount(); $i++){
 					$dados['dados'][] = $sql->fetch(PDO::FETCH_ASSOC);
 				}
-				
-				
+								
 				$e = $sql->errorinfo();
-				$dados['mensagem'] = array(self::erro($e[1]), 'Retornou '.$sql->rowCount().' registro(s).');
-		
-				echo JSON::encode($dados);
+				$dados['mensagem'] = array('SQL' => self::erro($e[1]), 'WebService' => 'Retornou '.$sql->rowCount().' registro(s).');
+				
+				
 			endif;
 				
 		endif;
 		
 		$this->desconectar();		
-		
+		echo JSON::encode($dados);
 	}
 	
 	/*
